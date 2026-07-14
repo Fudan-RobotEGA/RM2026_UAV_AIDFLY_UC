@@ -269,6 +269,16 @@ do_start() {
         fi
     fi
 
+    # Health LED UART (Jetson Orin Nano UART2, JST-GH 1.25 4-pin connector → /dev/ttyTHS2)
+    # 让容器内 health_led.py 能写 UART 触发外部 LED 桥接器
+    # drone 跟 dev 端都默认 mount, 没设备时 runtime 启动不 fail
+    if [[ -e /dev/ttyTHS2 ]]; then
+        device_args+=(--device /dev/ttyTHS2:/dev/ttyTHS2)
+        info "mount health LED UART: /dev/ttyTHS2 → /dev/ttySH2"
+    else
+        info "[warn] /dev/ttyTHS2 不存在, health_led 会 fallback no-op (不阻塞 launch)"
+    fi
+
     # ---- port forwards (noVNC) -------------------------------------------
     local port_args=()
     if [[ -n "$BRINGUP_GUI_FLAG" ]]; then

@@ -88,8 +88,10 @@ docker exec "$CONTAINER" bash -lc "pkill -f rm_dep-watchdog 2>/dev/null; sleep 1
 docker cp "$WATCHDOG_HOST" "$CONTAINER:/opt/uav_ws/scripts/rm_dep-watchdog.sh"
 docker cp "$LAUNCH_HOST" "$CONTAINER:/opt/uav_ws/scripts/launch_odin_px4.sh"
 
-# health_led.py 也拷到 host /usr/local/bin/ (watchdog 在 host 跑, 调它 trigger 启动信号灯)
+# health_led.py 也拷进容器 (watchdog 用 docker exec 调用) + host /usr/local/bin/ (备查)
 HEALTH_LED_HOST="/home/<drone-user>/rm_ws/scripts/health_led.py"
+docker cp "$HEALTH_LED_HOST" "$CONTAINER:/usr/local/bin/health_led.py"
+docker exec "$CONTAINER" chmod +x /usr/local/bin/health_led.py
 sudo cp "$HEALTH_LED_HOST" /usr/local/bin/health_led.py
 sudo chmod +x /usr/local/bin/health_led.py
 

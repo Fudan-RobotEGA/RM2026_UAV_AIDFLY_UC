@@ -59,7 +59,9 @@ services:
     # 不接硬件调试时: 留空 (容器仍能起, ODIN/PX4 节点会 fail)
     # 接 PX4 USB (FCU MAVLink): 加 - "/dev/ttyACM0:/dev/ttyACM0"
     # 接 ODIN: 加 - "/dev/bus/usb:/dev/bus/usb"  (整 bus 才能找到 vendor 2207:0019)
-    devices: []
+    # 接 health LED (Jetson UART2 /dev/ttyTHS2): mount 让 health_led.py 在容器内能写 UART
+    devices:
+      - /dev/ttyTHS2:/dev/ttyTHS2
 
     environment:
       # --- ROS + mavros 配置 (从 .env 读, 默认值这里) ---

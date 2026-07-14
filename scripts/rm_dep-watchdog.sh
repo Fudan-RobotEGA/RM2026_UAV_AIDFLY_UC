@@ -94,14 +94,16 @@ while true; do
 
     # 验证 3 节点都活了 → trigger health_led ready signal
     # (避免静默失败: 飞手起飞前看到 LED 闪, 确认链路通)
+    # health_led.py 通过 /dev/ttyTHS2 UART 写 READY 信号给外部 LED 桥接器
+    # 容器内执行 (start_uav_container.sh 已 mount /dev/ttyTHS2)
     if pgrep -f host_sdk_sample >/dev/null 2>&1 && \
        pgrep -f mavros_node >/dev/null 2>&1 && \
        pgrep -f slam_to_mavros_node >/dev/null 2>&1; then
-        if [[ -x /usr/local/bin/health_led.py ]]; then
-            python3 /usr/local/bin/health_led.py ready 2>&1 | tee -a "$WD_LOG" || true
+        if docker exec "$CONTAINER" test -x /usr/local/bin/health_led.py 2>/dev/null; then
+            docker exec "$CONTAINER" python3 /usr/local/bin/health_led.py ready 2>&1 | tee -a "$WD_LOG" || true
             log "✨ health_led: 3 nodes ready, LED triggered (READY × 3)"
         else
-            log "⚠️  /usr/local/bin/health_led.py 不存在, 跳过 LED 信号"
+            log "⚠️  /usr/local/bin/health_led.py 不存在容器内, 跳过 LED 信号"
         fi
     else
         log "⚠️  3 节点还没全 ready, LED 不闪 (health_led 跳过)"
