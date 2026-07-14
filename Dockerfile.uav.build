@@ -104,11 +104,13 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
         ros-${ROS_DISTRO}-rosidl-default-generators \
         ros-${ROS_DISTRO}-rosidl-default-runtime \
         ros-${ROS_DISTRO}-ament-cmake-auto \
-        # ROS 官方 vendor meta-pkg (apt 装自带 share/<pkg>/package.sh marker)
-        ros-${ROS_DISTRO}-angles \                       # mavros_extras build 依赖
-        ros-${ROS_DISTRO}-eigen3-cmake-module \          # mavros_extras cmake find_package
-        ros-${ROS_DISTRO}-gtest-vendor \                 # ament_cmake_gtest 用
-        ros-${ROS_DISTRO}-gmock-vendor \                 # ament_cmake_gmock 用
+        # ROS 官方 vendor meta-pkg (apt 装自带 share/<pkg>/package.sh marker, colcon enumerate 自动找到)
+        # mavros_extras build 依赖: angles + eigen3-cmake-module
+        # ament_cmake test helper: gtest-vendor + gmock-vendor
+        ros-${ROS_DISTRO}-angles \
+        ros-${ROS_DISTRO}-eigen3-cmake-module \
+        ros-${ROS_DISTRO}-gtest-vendor \
+        ros-${ROS_DISTRO}-gmock-vendor \
         # 调试 + 辅助
         gdb \
         strace \
