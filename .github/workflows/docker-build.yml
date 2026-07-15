@@ -27,8 +27,6 @@ jobs:
   build-runtime:
     name: build ega-uav:runtime
     runs-on: ubuntu-latest
-    outputs:
-      runtime-tag: ${{ steps.meta.outputs.runtime-tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -136,9 +134,9 @@ jobs:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
             ROS_APT_MIRROR=tsinghua
-            # 从同一个 workflow 的 build-runtime 输出拉 runtime image (for same arch)
+            # 从 build-runtime 拉 runtime image (hardcode tag, metadata-action 没 runtime-tag output)
             # image name lowercase (Docker 强制): fudan-robotega
-            BASE_IMAGE=ghcr.io/fudan-robotega/ega-uav-runtime:${{ needs.build-runtime.outputs.runtime-tag }}
+            BASE_IMAGE=ghcr.io/fudan-robotega/ega-uav-runtime:runtime-v1.0-stable
 
       - name: Image digest
         if: steps.meta.outputs.digest
