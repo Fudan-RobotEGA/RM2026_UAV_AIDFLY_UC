@@ -9,8 +9,8 @@
 ```
 [ODIN1 雷达 (USB vendor 2207:0019)]    [Mid-360 / Velodyne (可选)]
         ↓                                       ↓
-[ODIN SLAM driver / fast_lio]              [livox_ros_driver2]
-        ↓ nav_msgs/Odometry                        ↓
+[ODIN SLAM driver]              [livox_ros_driver2 + fast_lio(point_lio)]
+        ↓ odin1/odometry                            ↓ /Odometry 
         └─────────────┬─────────────────────────────┘
                       ↓
         [slam_to_mavros_node (自写, 带 vision_pose patch)]
