@@ -52,7 +52,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           # Docker 要求 image name lowercase, GHCR 接受 mixed case 但 buildx stage 解析时强制 lowercase
-          images: ghcr.io/${{ lower(github.repository_owner) }}/ega-uav-runtime
+          images: ghcr.io/${{ toLowerCase(github.repository_owner) }}/ega-uav-runtime
           tags: |
             # 短 SHA
             type=sha,format=short
@@ -81,7 +81,7 @@ jobs:
       - name: Image digest
         if: steps.meta.outputs.digest
         run: |
-          echo "Runtime image pushed: ghcr.io/${{ lower(github.repository_owner) }}/ega-uav-runtime@${{ steps.meta.outputs.digest }}"
+          echo "Runtime image pushed: ghcr.io/${{ toLowerCase(github.repository_owner) }}/ega-uav-runtime@${{ steps.meta.outputs.digest }}"
 
   # ============================================================================
   # 2. build-dev: FROM build-runtime 复用 runtime layer (节省 build time)
@@ -112,7 +112,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ lower(github.repository_owner) }}/ega-uav-build
+          images: ghcr.io/${{ toLowerCase(github.repository_owner) }}/ega-uav-build
           tags: |
             # 短 SHA
             type=sha,format=short
@@ -137,10 +137,10 @@ jobs:
             BUILDKIT_INLINE_CACHE=1
             ROS_APT_MIRROR=tsinghua
             # 从同一个 workflow 的 build-runtime 输出拉 runtime image (for same arch)
-            # image name lowercase (Docker 强制): lower(github.repository_owner)
-            BASE_IMAGE=ghcr.io/${{ lower(github.repository_owner) }}/ega-uav-runtime:${{ needs.build-runtime.outputs.runtime-tag }}
+            # image name lowercase (Docker 强制): toLowerCase(github.repository_owner)
+            BASE_IMAGE=ghcr.io/${{ toLowerCase(github.repository_owner) }}/ega-uav-runtime:${{ needs.build-runtime.outputs.runtime-tag }}
 
       - name: Image digest
         if: steps.meta.outputs.digest
         run: |
-          echo "Dev image pushed: ghcr.io/${{ lower(github.repository_owner) }}/ega-uav-build@${{ steps.meta.outputs.digest }}"
+          echo "Dev image pushed: ghcr.io/${{ toLowerCase(github.repository_owner) }}/ega-uav-build@${{ steps.meta.outputs.digest }}"
